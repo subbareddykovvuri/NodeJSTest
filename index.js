@@ -74,6 +74,16 @@ const dataSchema = new mongoose.Schema({
 // Create a mongoose model based on the schema
 const Data = mongoose.model('Data', dataSchema);
 
+app.get('/', async (req, res) => {
+    try {
+        // Retrieve data from MongoDB
+        const allData = await Data.find();
+        res.json(allData);
+    } catch (error) {
+        console.error('Error fetching data:', error);
+        res.status(500).json({ error: 'An error occurred while fetching data' });
+    }
+});
 // Route to handle POST requests from ESP8266
 app.post('/data', (req, res) => {
     // Extract data from the request body
