@@ -1,4 +1,4 @@
-const express =require('express')
+/*const express =require('express')
 const bodyParser=require('body-parser')
 const request=require('request')
 
@@ -40,4 +40,66 @@ app.post('/',function(req,res){
 
 app.listen(3000,function(){
     console.log("weatherly app listening on port 3000");
+});*/
+// Import necessary modules
+const express = require('express');
+const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
+
+// Initialize Express app
+const app = express();
+
+// Middleware for parsing JSON bodies
+app.use(bodyParser.json());
+
+// MongoDB connection URI
+//const mongoURI = 'mongodb://localhost:27017/mydatabase'; // Change this to your MongoDB URI
+const mongoURI='mongodb+srv://subbareddy934:SFZp2ZON3TU9EDXb@weatherapp.7wvka59.mongodb.net/?retryWrites=true&w=majority&appName=WeatherApp';
+// Connect to MongoDB
+mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true });
+const db = mongoose.connection;
+
+// Check MongoDB connection
+db.once('open', () => {
+    console.log('Connected to MongoDB');
+});
+
+// Define a mongoose schema for your data
+const dataSchema = new mongoose.Schema({
+    temperature: Number,
+    humidity: Number,
+    // Add more fields as needed
+});
+
+// Create a mongoose model based on the schema
+const Data = mongoose.model('Data', dataSchema);
+
+// Route to handle POST requests from ESP8266
+app.post('/data', (req, res) => {
+    // Extract data from the request body
+    const { temperature, humidity } = req.body;
+
+    // Create a new document using the Data model
+    const newData = new Data({
+        temperature,
+        humidity,
+        // Add more fields as needed
+    });
+
+    // Save the document to the database
+    newData.save((err) => {
+        if (err) {
+            console.error('Error saving data:', err);
+            res.status(500).send('Error saving data to database');
+        } else {
+            console.log('Data saved successfully');
+            res.status(200).send('Data saved successfully');
+        }
+    });
+});
+
+// Start the server
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`Server listening on port ${PORT}`);
 });
