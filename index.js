@@ -7,8 +7,14 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Connect to MongoDB (replace 'your_database_url' with your actual MongoDB connection string)
-mongoose.connect('mongodb+srv://subbareddy934:SFZp2ZON3TU9EDXb@weatherapp.7wvka59.mongodb.net/?retryWrites=true&w=majority&appName=WeatherApp', { useNewUrlParser: true, useUnifiedTopology: true });
+const mongoURI='mongodb+srv://subbareddy934:SFZp2ZON3TU9EDXb@weatherapp.7wvka59.mongodb.net/?retryWrites=true&w=majority&appName=WeatherApp';
+
+mongoose.connect(mongoURI, { useNewUrlParser: true, useUnifiedTopology: true });
 const db = mongoose.connection;
+
+db.once('open', () => {
+    console.log('Connected to MongoDB');
+});
 
 // Define a Mongoose schema for color data
 const colorSchema = new mongoose.Schema({
