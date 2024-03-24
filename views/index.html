@@ -12,7 +12,7 @@
     </div>
 
     <script>
-        const socket = new WebSocket('wss://https://nodejstest-8db2.onrender.com:8080');
+        const socket = new WebSocket('wss://nodejstest-8db2.onrender.com:8080');
 
         socket.onmessage = function(event) {
             const { colors, counts } = JSON.parse(event.data);
