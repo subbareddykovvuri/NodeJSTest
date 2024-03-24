@@ -19,7 +19,9 @@ const colorSchema = new mongoose.Schema({
 const Color = mongoose.model('Color', colorSchema);
 
 // Middleware to parse JSON bodies
-app.use(express.json());
+//app.use(express.json());
+app.use(express.static('public'));
+
 
 // Route to handle incoming color data
 app.post('/api/colors', async (req, res) => {
