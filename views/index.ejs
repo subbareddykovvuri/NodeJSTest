@@ -1,4 +1,80 @@
+
 <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Color Data Visualization</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div style="width: 600px; margin: auto;">
+        <canvas id="colorChart"></canvas>
+    </div>
+
+    <script>
+        // Function to fetch color data from the server and update the chart
+        async function fetchColorDataAndUpdateChart() {
+            try {
+                const response = await fetch('/api/colors');
+                const data = await response.json();
+
+                const colors = [];
+                const counts = [];
+
+                data.forEach(item => {
+                    colors.push(item.color);
+                    counts.push(item.count);
+                });
+
+                updateChart(colors, counts);
+            } catch (error) {
+                console.error('Error fetching color data:', error);
+            }
+        }
+
+        // Function to update the chart with color data
+        function updateChart(colors, counts) {
+            const ctx = document.getElementById('colorChart').getContext('2d');
+            const chart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: colors,
+                    datasets: [{
+                        label: 'Color Counts',
+                        data: counts,
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(255, 206, 86, 0.2)',
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true
+                            }
+                        }]
+                    }
+                }
+            });
+        }
+
+        // Fetch color data and update the chart when the page loads
+        fetchColorDataAndUpdateChart();
+    </script>
+</body>
+</html>
+
+<!--<!DOCTYPE html>
 <html lang="en">
     <head>
         <meta charset="UTF-8" />
@@ -25,4 +101,4 @@
             </fieldset>
         </div>
     </body>
-</html>
+</html>-->
