@@ -27,7 +27,7 @@ app.use(express.static('views'));
 app.post('/api/colors', async (req, res) => {
     try {
         const { color } = req.body;
-
+        console.log(color);
         // Find existing color in database
         let existingColor = await Color.findOne({ color });
 
