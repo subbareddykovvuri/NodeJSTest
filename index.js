@@ -1,3 +1,70 @@
+// server.js
+
+const express = require('express');
+const mongoose = require('mongoose');
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+// Connect to MongoDB (replace 'your_database_url' with your actual MongoDB connection string)
+mongoose.connect(mongodb+srv://subbareddy934:SFZp2ZON3TU9EDXb@weatherapp.7wvka59.mongodb.net/?retryWrites=true&w=majority&appName=WeatherApp', { useNewUrlParser: true, useUnifiedTopology: true });
+const db = mongoose.connection;
+
+// Define a Mongoose schema for color data
+const colorSchema = new mongoose.Schema({
+    color: String,
+    count: Number,
+});
+
+const Color = mongoose.model('Color', colorSchema);
+
+// Middleware to parse JSON bodies
+app.use(express.json());
+
+// Route to handle incoming color data
+app.post('/api/colors', async (req, res) => {
+    try {
+        const { color } = req.body;
+
+        // Find existing color in database
+        let existingColor = await Color.findOne({ color });
+
+        if (!existingColor) {
+            // If color doesn't exist, create a new entry
+            existingColor = new Color({ color, count: 1 });
+        } else {
+            // If color exists, increment the count
+            existingColor.count++;
+        }
+
+        // Save or update the color data
+        await existingColor.save();
+
+        res.status(200).send('Color data saved successfully');
+    } catch (error) {
+        console.error('Error saving color data:', error);
+        res.status(500).send('An error occurred while saving color data');
+    }
+});
+
+// Route to fetch color data
+app.get('/api/colors', async (req, res) => {
+    try {
+        const colors = await Color.find();
+        res.json(colors);
+    } catch (error) {
+        console.error('Error fetching color data:', error);
+        res.status(500).send('An error occurred while fetching color data');
+    }
+});
+
+// Start the server
+app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+});
+
+
+
 /*const express =require('express')
 const bodyParser=require('body-parser')
 const request=require('request')
@@ -41,6 +108,7 @@ app.post('/',function(req,res){
 app.listen(3000,function(){
     console.log("weatherly app listening on port 3000");
 });*/
+/*
 // Import necessary modules
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -113,3 +181,4 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Server listening on port ${PORT}`);
 });
+*/
