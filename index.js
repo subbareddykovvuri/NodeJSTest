@@ -20,7 +20,7 @@ const Color = mongoose.model('Color', colorSchema);
 
 // Middleware to parse JSON bodies
 //app.use(express.json());
-app.use(express.static('public'));
+app.use(express.static('views'));
 
 
 // Route to handle incoming color data
