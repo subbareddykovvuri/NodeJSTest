@@ -12,8 +12,9 @@
     </div>
 
     <script>
-        const socket = new WebSocket('wss://nodejstest-8db2.onrender.com',{rejectUnauthorized: false});
-
+       const protocol = window.location.protocol.includes('https') ? 'wss': 'ws'
+        const socket = new WebSocket(`${protocol}://${location.host}`);
+        //const socket = new WebSocket('ws://localhost:8080',{rejectUnauthorized: false});
         socket.onmessage = function(event) {
             const { colors, counts } = JSON.parse(event.data);
             updateChart(colors, counts);
