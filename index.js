@@ -3,6 +3,8 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const WebSocket = require('ws');
+
+const { createServer } = require('http');
 var router=express.Router();
 
 const app = express();
@@ -32,7 +34,11 @@ app.use(express.json());
 app.use(express.static('views'));
 
 // WebSocket server
-const wss = new WebSocket.Server({ port:8080});
+//const wss = new WebSocket.Server({ port:8080});
+
+
+const server = createServer(app);
+const wss = new WebSocket.Server({ server });
 
 // Broadcast color data updates to all connected clients
 function broadcastColorDataUpdate(data) {
@@ -113,9 +119,12 @@ wss.on('connection', function connection(ws) {
 });
 
 // Start the server
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-});
+//app.listen(PORT, () => {
+//    console.log(`Server is running on port ${PORT}`);
+//});
+server.listen(8080, function () {
+    console.log('Listening on http://0.0.0.0:8080');
+  });
 
 
 
