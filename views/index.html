@@ -19,11 +19,15 @@
             const { colors, counts } = JSON.parse(event.data);
             updateChart(colors, counts);
         };
-
+        let myChart;
        
         function updateChart(colors, counts) {
             const ctx = document.getElementById('colorChart').getContext('2d');
-            const chart = new Chart(ctx, {
+             if (myChart) {
+                myChart.destroy();
+            }
+            
+            myChart = new Chart(ctx, {
                 type: 'bar',
                 data: {
                     labels: colors,
