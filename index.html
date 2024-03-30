@@ -1,27 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <title>Color Data Visualization</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="style.css">
+
 </head>
+
 <body>
-    <div style="width: 600px; margin: auto;">
-        <canvas id="colorChart"></canvas>
+
+    <div class="container">
+        <div class="row">
+            <img src="https://acet.ac.in/logos/LOGO3_old.png" class="center-block" id="adityaLogo">
+        </div>
+        <br>
+        <br>
+        <div class="row">
+            <h1 class="center">REMOTE MONITORING</h1>
+        </div>
+        <br>
+        <div class="container" id="main">
+            <div class="row">
+                <h1></h1>
+            </div>
+            <div class="row">
+                <h2 class="col-md-1"></h2>
+                <h2 class="col-md-11">Product Sorting Based on Color</h1>
+            </div>
+            <br>
+            <div class="row" >
+                <div class="col-md-2"></div>
+                <div class="col-md-8">
+                    <canvas id="colorChart" width="100%" ></canvas>
+                </div>
+            </div>
+        </div>
+
     </div>
 
-    <script>
-        const socket = new WebSocket('wss://' + window.location.host);
 
-        socket.onmessage = function(event) {
+
+
+
+    <script>
+        // will not use tls if the connection is not made over https
+        const protocol = window.location.protocol.includes('https') ? 'wss' : 'ws'
+        const socket = new WebSocket(`${protocol}://${location.host}`);
+        //const socket = new WebSocket('ws://localhost:8080',{rejectUnauthorized: false});
+        let myChart;
+        socket.onmessage = function (event) {
             const { colors, counts } = JSON.parse(event.data);
             updateChart(colors, counts);
         };
 
+
         function updateChart(colors, counts) {
             const ctx = document.getElementById('colorChart').getContext('2d');
-            const chart = new Chart(ctx, {
+            if (myChart) {
+                myChart.destroy();
+            }
+            myChart = new Chart(ctx, {
                 type: 'bar',
                 data: {
                     labels: colors,
@@ -29,29 +75,28 @@
                         label: 'Color Counts',
                         data: counts,
                         backgroundColor: [
-                            'rgba(255, 99, 132, 0.2)',
-                            'rgba(54, 162, 235, 0.2)',
-                            'rgba(255, 206, 86, 0.2)',
+                            'rgba(255, 99, 132, 0.5)',
+                            'rgba(30, 206, 86, 0.5)',
+                            'rgba(54, 162, 235, 0.5)',
                         ],
                         borderColor: [
                             'rgba(255, 99, 132, 1)',
+                            'rgba(30, 206, 86, 1)',
                             'rgba(54, 162, 235, 1)',
-                            'rgba(255, 206, 86, 1)',
                         ],
                         borderWidth: 1
                     }]
                 },
                 options: {
                     scales: {
-                        yAxes: [{
-                            ticks: {
-                                beginAtZero: true
-                            }
-                        }]
+                        y: {
+                            beginAtZero: true // Ensure that the y-axis starts at zero
+                        }
                     }
                 }
             });
         }
     </script>
 </body>
+
 </html>
