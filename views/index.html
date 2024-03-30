@@ -24,7 +24,7 @@
         <br>
         <br>
         <div class="row">
-            <h1 class="center">REMOTE MONITORING</h1>
+            <h1 class="center" id="main_heading">REMOTE MONITORING</h1>
         </div>
         <br>
         <div class="container" id="main">
@@ -36,14 +36,18 @@
                 <h2 class="col-md-11">Product Sorting Based on Color</h1>
             </div>
             <br>
-            <div class="row" >
+            <div class="row">
                 <div class="col-md-2"></div>
                 <div class="col-md-8">
-                    <canvas id="colorChart" width="100%" ></canvas>
+                    <canvas id="colorChart" width="100%"></canvas>
+                    <br>
+                    <button class="btn btn-danger pull-right" onclick="clearData()">Clear Data</button>
                 </div>
+                
             </div>
+           
         </div>
-
+        <br>
     </div>
 
 
@@ -75,9 +79,9 @@
                         label: 'Color Counts',
                         data: counts,
                         backgroundColor: [
-                            'rgba(255, 99, 132, 0.5)',
-                            'rgba(30, 206, 86, 0.5)',
-                            'rgba(54, 162, 235, 0.5)',
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(30, 206, 86, 1)',
+                            'rgba(54, 162, 235, 1)',
                         ],
                         borderColor: [
                             'rgba(255, 99, 132, 1)',
@@ -95,6 +99,31 @@
                     }
                 }
             });
+        }
+
+        function clearData() {
+            var flag = confirm("Do you want delete the data");
+            if (flag) {
+                fetch('/api/colors', {
+                    method: 'DELETE' // Assuming DELETE method is used to clear color data
+                })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Failed to clear color data');
+                        }
+                        return response.text();
+                    })
+                    .then(data => {
+                        console.log('Color data cleared:', data);
+                        alert('Color data cleared successfully');
+                        //document.getElementById('result').innerText = 'Color data cleared successfully';
+                    })
+                    .catch(error => {
+                        console.error('Error clearing color data:', error);
+                        alert('Error clearing color data');
+                       // document.getElementById('result').innerText = 'Error clearing color data';
+                    });
+            }
         }
     </script>
 </body>
