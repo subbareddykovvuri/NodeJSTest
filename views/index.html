@@ -1,32 +1,70 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <title>Color Data Visualization</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="style.css">
+
 </head>
+
 <body>
-    <div style="width: 600px; margin: auto;">
-        <canvas id="colorChart"></canvas>
+
+    <div class="container">
+        <div class="row">
+            <img src="https://acet.ac.in/logos/LOGO3_old.png" class="center-block" id="adityaLogo">
+        </div>
+        <br>
+        <br>
+        <div class="row">
+            <h1 class="center">REMOTE MONITORING</h1>
+        </div>
+        <br>
+        <div class="container" id="main">
+            <div class="row">
+                <h1></h1>
+            </div>
+            <div class="row">
+                <h2 class="col-md-1"></h2>
+                <h2 class="col-md-11">Product Sorting Based on Color</h1>
+            </div>
+            <br>
+            <div class="row" style="width: 600px; margin: auto;" >
+                <header></header>
+                <canvas id="colorChart"></canvas>
+            </div>
+        </div>
+
     </div>
 
+
+
+
+
     <script>
-       const protocol = window.location.protocol.includes('https') ? 'wss': 'ws'
+        // will not use tls if the connection is not made over https
+        const protocol = window.location.protocol.includes('https') ? 'wss' : 'ws'
         const socket = new WebSocket(`${protocol}://${location.host}`);
         //const socket = new WebSocket('ws://localhost:8080',{rejectUnauthorized: false});
-        socket.onmessage = function(event) {
+        let myChart;
+        socket.onmessage = function (event) {
             const { colors, counts } = JSON.parse(event.data);
             updateChart(colors, counts);
         };
-        let myChart;
-       
+
+
         function updateChart(colors, counts) {
             const ctx = document.getElementById('colorChart').getContext('2d');
-             if (myChart) {
+            if (myChart) {
                 myChart.destroy();
             }
-            
             myChart = new Chart(ctx, {
                 type: 'bar',
                 data: {
@@ -49,7 +87,7 @@
                 },
                 options: {
                     scales: {
-                       y: {
+                        y: {
                             beginAtZero: true // Ensure that the y-axis starts at zero
                         }
                     }
@@ -58,4 +96,5 @@
         }
     </script>
 </body>
+
 </html>
