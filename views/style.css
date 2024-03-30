@@ -1,0 +1,18 @@
+body {
+    background: rgb(173, 217, 245);
+    background: radial-gradient(circle, rgba(173, 217, 245, 1) 0%, rgba(122, 149, 235, 1) 100%);
+}
+
+#adityaLogo {
+    max-height: 150px;
+    max-width: 100%;
+
+}
+
+#main {
+    border-radius: 34px;
+    background-color: #FFFFFF;
+    box-shadow: 0px 11px 34px rgb(0, 0, 0, 0.2);
+    padding: 20px 0px;
+    backdrop-filter: blur(10px);
+}
